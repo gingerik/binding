@@ -93,11 +93,19 @@ export class SetterObserver {
     this.currentValue = this.obj[this.propertyName];
     this.setValue = this.setterValue;
     this.getValue = this.getterValue;
+    let enumerable = true;
+	if (this.propertyName in this.obj) {
+dump(this.propertyName, this.obj.propertyIsEnumerable(this.propertyName));
+	  let obj = this.obj;
+	  while (!obj.hasOwnProperty(this.propertyName)) {
+	    obj = Object.getPrototypeOf(obj);
+	  }
+      enumerable = obj.propertyIsEnumerable(this.propertyName);
+    }
 
     if (!Reflect.defineProperty(this.obj, this.propertyName, {
       configurable: true,
-      enumerable: this.propertyName in this.obj ?
-          this.obj.propertyIsEnumerable(this.propertyName) : true,
+      enumerable: enumerable,
       get: this.getValue.bind(this),
       set: this.setValue.bind(this)
     })) {

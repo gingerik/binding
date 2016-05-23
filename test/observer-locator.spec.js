@@ -69,6 +69,17 @@ describe('ObserverLocator', () => {
       locator.getObserver(obj, prop).convertProperty();
     });
     expect(Object.keys(obj)).toEqual(['foo', 'baz']);
+
+    var ext = Object.create(obj);
+    ['foo', 'bar', 'baz'].forEach(prop => {
+      locator.getObserver(ext, prop).convertProperty();
+    });
+	var keys = [];
+	for (var key in ext) {
+	  keys.push(key);
+	}
+    expect(keys).toEqual(['foo', 'baz']);
+	
   });
 
   it('uses ValueAttributeObserver for element value attributes', () => {
